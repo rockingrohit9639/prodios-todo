@@ -3,7 +3,7 @@ import React from "react";
 import "./SortableItem.css";
 import { CSS } from "@dnd-kit/utilities";
 
-function SortableItem({ item, handleDelete }) {
+function SortableItem({ item, handleDelete, setModalOpen, setModalItem }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: item.id });
 
@@ -13,7 +13,13 @@ function SortableItem({ item, handleDelete }) {
   };
   return (
     <div ref={setNodeRef} style={style}>
-      <div className="item">
+      <div
+        className="item"
+        onClick={() => {
+          setModalItem(item);
+          setModalOpen(true);
+        }}
+      >
         <div className="item__content" {...attributes} {...listeners}>
           <p className="item__title">{item.title}</p>
         </div>

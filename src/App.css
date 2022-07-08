@@ -83,6 +83,31 @@
   gap: 1rem;
 }
 
+.item__modalContainer {
+  width: 60%;
+  height: 50%;
+  background: #fff;
+  border: none;
+  padding: 1.5rem;
+}
+
+.item__titleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 2rem 0;
+}
+
+.item__status {
+  margin-top: 1.5rem;
+}
+
+[name="close-outline"] {
+  color: red;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 650px) {
   .todos {
     flex-direction: column;

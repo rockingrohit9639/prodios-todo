@@ -19,6 +19,7 @@ import {
   saveToLocalStorage,
   updateStatusInLocalStorage,
 } from "./utils";
+import { Modal } from "@mui/material";
 
 function App() {
   const [title, setTitle] = useState("");
@@ -26,6 +27,9 @@ function App() {
 
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
+
+  const [ModalOpen, setModalOpen] = useState(false);
+  const [modalItem, setModalItem] = useState({});
 
   const animateLayoutChanges = (args) =>
     defaultAnimateLayoutChanges({ ...args, wasDragging: true });
@@ -190,15 +194,54 @@ function App() {
               id="pending"
               handleDelete={handleDelete}
               items={pending}
+              setModalOpen={setModalOpen}
+              setModalItem={setModalItem}
             />
             <Container
               id="completed"
               handleDelete={handleDelete}
               items={completed}
+              setModalOpen={setModalOpen}
+              setModalItem={setModalItem}
             />
           </DndContext>
         </div>
       </main>
+
+      <Modal
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        open={ModalOpen}
+        onClose={() => setModalOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div className="item__modalContainer">
+          <div className="item__titleWrapper">
+            <h2 className="item__modalTitle">{modalItem.title}</h2>
+            <ion-icon
+              name="close-outline"
+              onClick={() => setModalOpen(false)}
+            ></ion-icon>
+          </div>
+
+          <p className="item__modalDesc">{modalItem.desc}</p>
+
+          <p className="item__status">
+            Status:{" "}
+            <span
+              style={{
+                color: modalItem.status === "pending" ? "yellow" : "green",
+              }}
+            >
+              {modalItem?.status?.toUpperCase()}
+            </span>
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }
