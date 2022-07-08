@@ -18,6 +18,7 @@ import {
   deleteFromLocalStorage,
   saveToLocalStorage,
   updateStatusInLocalStorage,
+  updateTodoInLocalStorage,
 } from "./utils";
 import { Modal } from "@mui/material";
 
@@ -30,6 +31,10 @@ function App() {
 
   const [ModalOpen, setModalOpen] = useState(false);
   const [modalItem, setModalItem] = useState({});
+
+  const [newTitle, setNewTitle] = useState("");
+  const [newDesc, setNewDesc] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
 
   const animateLayoutChanges = (args) =>
     defaultAnimateLayoutChanges({ ...args, wasDragging: true });
@@ -141,6 +146,44 @@ function App() {
     deleteFromLocalStorage(id);
   };
 
+  const toggleEdit = (item) => {
+    if (isEdit) {
+      setIsEdit(false);
+    } else {
+      setNewTitle(item.title);
+      setNewDesc(item.desc);
+      setIsEdit(true);
+    }
+  };
+
+  const handleEdit = () => {
+    if (!newTitle) {
+      window.alert("Please enter a title");
+      return;
+    }
+
+    if (!newDesc) {
+      window.alert("Please enter a description");
+      return;
+    }
+
+    const item = findItem(modalItem.id, modalItem.status);
+    item.title = newTitle;
+    item.desc = newDesc;
+
+    if (item.status === "pending") {
+      setPending(pending.filter((todo) => (todo.id === item.id ? item : todo)));
+    } else if (item.status === "completed") {
+      setCompleted(
+        completed.filter((todo) => (todo.id === item.id ? item : todo))
+      );
+    }
+
+    updateTodoInLocalStorage(item.id, item);
+    setModalOpen(false);
+    setIsEdit(false);
+  };
+
   useEffect(() => {
     const todos = JSON.parse(localStorage.getItem("todos"));
     if (todos) {
@@ -220,15 +263,48 @@ function App() {
         aria-describedby="modal-modal-description"
       >
         <div className="item__modalContainer">
-          <div className="item__titleWrapper">
-            <h2 className="item__modalTitle">{modalItem.title}</h2>
-            <ion-icon
-              name="close-outline"
-              onClick={() => setModalOpen(false)}
-            ></ion-icon>
+          <div className="modal__actions">
+            <button className="button" onClick={() => toggleEdit(modalItem)}>
+              <ion-icon name="create"></ion-icon>
+            </button>
+
+            <button className="button">
+              <ion-icon
+                name="close-outline"
+                onClick={() => setModalOpen(false)}
+              ></ion-icon>
+            </button>
           </div>
 
-          <p className="item__modalDesc">{modalItem.desc}</p>
+          {isEdit && (
+            <input
+              type="text"
+              className="input inputForm__title"
+              placeholder="Todo Title"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+            />
+          )}
+
+          {isEdit && (
+            <textarea
+              rows="4"
+              className="input inputForm__desc"
+              placeholder="Todo Description"
+              value={newDesc}
+              onChange={(e) => setNewDesc(e.target.value)}
+            ></textarea>
+          )}
+      
+          {isEdit && (
+            <button className="button editButton" onClick={handleEdit}>
+              Save Todo
+            </button>
+          )}
+
+          {!isEdit && <h2 className="item__modalTitle">{modalItem.title}</h2>}
+
+          {!isEdit && <p className="item__modalDesc">{modalItem.desc}</p>}
 
           <p className="item__status">
             Status:{" "}

@@ -91,21 +91,37 @@
   padding: 1.5rem;
 }
 
-.item__titleWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 0 2rem 0;
-}
-
 .item__status {
   margin-top: 1.5rem;
 }
 
-[name="close-outline"] {
-  color: red;
-  font-size: 1.5rem;
+.modal__actions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: end;
+  gap: 1rem;
+}
+
+.item__modalDesc {
+  margin-top: 1rem;
+}
+
+.button {
+  border: none;
+  outline: none;
+  font-size: 2rem;
+  background: none;
   cursor: pointer;
+}
+
+.editButton {
+  font-size: 1rem;
+  font-family: "Josefin Sans", sans-serif;
+  background-color: blue;
+  color: #fff;
+  font-weight: bold;
+  padding: 0.8rem 2rem;
+  border-radius: 5px;
 }
 
 @media only screen and (max-width: 650px) {

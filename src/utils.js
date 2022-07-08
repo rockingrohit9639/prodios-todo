@@ -28,3 +28,16 @@ export const deleteFromLocalStorage = (id) => {
 
   localStorage.setItem("todos", JSON.stringify(todos));
 };
+
+export const updateTodoInLocalStorage = (id, newTodo) => {
+  const todos = JSON.parse(localStorage.getItem("todos"));
+
+  todos.forEach((todo) => {
+    if (todo.id === id) {
+      todo.title = newTodo.title;
+      todo.description = newTodo.description;
+    }
+  });
+
+  localStorage.setItem("todos", JSON.stringify(todos));
+};
