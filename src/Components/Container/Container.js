@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./Container.css";
 import { useDroppable } from "@dnd-kit/core";
 import {
@@ -8,7 +8,7 @@ import {
 import SortableItem from "../SortableItem/SortableItem";
 
 function Container({ id, items }) {
-  // console.log(items);
+  const itemIds = useMemo(() => items.map((item) => item.id), [items]);
 
   const { setNodeRef } = useDroppable({
     id,
@@ -17,7 +17,7 @@ function Container({ id, items }) {
   return (
     <SortableContext
       id={id}
-      items={items}
+      items={itemIds}
       strategy={verticalListSortingStrategy}
     >
       <div className="todos__list">

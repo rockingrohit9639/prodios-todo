@@ -8,68 +8,16 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import Container from "./Components/Container/Container";
-import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useState } from "react";
-
-const defaultAnnouncements = {
-  onDragStart(id) {
-    console.log(`Picked up draggable item ${id}.`);
-  },
-  onDragOver(id, overId) {
-    if (overId) {
-      console.log(
-        `Draggable item ${id} was moved over droppable area ${overId}.`
-      );
-      return;
-    }
-
-    console.log(`Draggable item ${id} is no longer over a droppable area.`);
-  },
-  onDragEnd(id, overId) {
-    if (overId) {
-      console.log(
-        `Draggable item ${id} was dropped over droppable area ${overId}`
-      );
-      return;
-    }
-
-    console.log(`Draggable item ${id} was dropped.`);
-  },
-  onDragCancel(id) {
-    console.log(`Dragging was cancelled. Draggable item ${id} was dropped.`);
-  },
-};
+import { v4 as uuid } from "uuid";
 
 function App() {
-  const [pending, setPending] = useState([
-    {
-      id: 1,
-      title: "Todo 1",
-      description: "Todo 1 description",
-      status: "pending",
-    },
-    {
-      id: 2,
-      title: "Todo 2",
-      description: "Todo 2 description",
-      status: "pending",
-    },
-  ]);
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
 
-  const [completed, setCompleted] = useState([
-    {
-      id: 3,
-      title: "Todo 3",
-      description: "Todo 3 description",
-      status: "completed",
-    },
-    {
-      id: 4,
-      title: "Todo 4",
-      description: "Todo 4 description",
-      status: "completed",
-    },
-  ]);
+  const [pending, setPending] = useState([]);
+  const [completed, setCompleted] = useState([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -77,10 +25,6 @@ function App() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
-  const handleDragStart = (e) => {
-    console.log("Drag start");
-  };
 
   const findContainer = (id) => {
     let container = null;
@@ -104,14 +48,20 @@ function App() {
     }
   };
 
-  const handleDragOver = (e) => {
+  const handleDragEnd = (e) => {
     const { active, over } = e;
     const { id } = active;
     const { id: overId } = over;
 
     // Find the containers
     const activeContainer = findContainer(id);
-    const overContainer = findContainer(overId);
+    let overContainer = "";
+
+    if (overId === "pending" || overId === "completed") {
+      overContainer = overId;
+    } else {
+      overContainer = findContainer(overId);
+    }
 
     if (
       !activeContainer ||
@@ -134,9 +84,33 @@ function App() {
     }
   };
 
-  function handleDragEnd(event) {
-    console.log("Drag end");
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!title) {
+      window.alert("Please enter a title");
+      return;
+    }
+
+    if (!desc) {
+      window.alert("Please enter a description");
+      return;
+    }
+
+    const unique_id = uuid();
+    const id = unique_id.slice(0, 8);
+
+    const newTodo = {
+      id,
+      title,
+      desc,
+    };
+
+    setPending((prev) => [...prev, newTodo]);
+
+    setTitle("");
+    setDesc("");
+  };
 
   return (
     <div className="App">
@@ -149,30 +123,33 @@ function App() {
         <div className="home__content">
           <h1 className="heading">prodios todo</h1>
 
-          <form className="inputForm">
+          <form className="inputForm" onSubmit={handleSubmit}>
             <input
               type="text"
               className="input inputForm__title"
               placeholder="Todo Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
 
             <textarea
               rows="4"
               className="input inputForm__desc"
               placeholder="Todo Description"
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
             ></textarea>
 
-            <button className="inputForm__button">Add</button>
+            <button className="inputForm__button" type="submit">
+              Add
+            </button>
           </form>
         </div>
 
         <div className="todos">
           <DndContext
-            announcements={defaultAnnouncements}
             sensors={sensors}
             collisionDetection={closestCorners}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
           >
             <Container id="pending" items={pending} />
