@@ -9,9 +9,9 @@ import {
 } from "@dnd-kit/core";
 import Container from "./Components/Container/Container";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
-import { saveToLocalStorage } from "./utils";
+import { saveToLocalStorage, updateStatusInLocalStorage } from "./utils";
 
 function App() {
   const [title, setTitle] = useState("");
@@ -77,11 +77,13 @@ function App() {
       let item = findItem(id, activeContainer);
       item.status = "completed";
       setCompleted([item, ...completed]);
+      updateStatusInLocalStorage(item.id, "completed");
     } else if (overContainer === "pending") {
       setCompleted(completed.filter((item) => item.id !== id));
       let item = findItem(id, activeContainer);
       item.status = "pending";
       setPending([item, ...pending]);
+      updateStatusInLocalStorage(item.id, "pending");
     }
   };
 
@@ -114,6 +116,16 @@ function App() {
     setTitle("");
     setDesc("");
   };
+
+  useEffect(() => {
+    const todos = JSON.parse(localStorage.getItem("todos"));
+    if (todos) {
+      setPending(todos.filter((todo) => todo.status === "pending"));
+      setCompleted(todos.filter((todo) => todo.status === "completed"));
+    }
+  }, []);
+
+  console.log(pending, completed);
 
   return (
     <div className="App">
