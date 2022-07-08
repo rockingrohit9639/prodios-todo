@@ -1,8 +1,29 @@
 .item {
-  padding: 1rem;
   margin-block: 1rem;
   background: #fff;
   cursor: pointer;
   border-radius: 5px;
   box-shadow: 0 6px 12px -10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item__content {
+  flex: 90%;
+  padding: 1rem;
+}
+
+.item__title {
+  font-size: 1.2rem;
+}
+
+.item__delete {
+  z-index: 100;
+  margin-right: 1rem;
+}
+
+[name="trash-outline"] {
+  color: red;
+  font-size: 1.1rem;
 }

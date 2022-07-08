@@ -16,3 +16,15 @@ export const updateStatusInLocalStorage = (id, status) => {
 
   localStorage.setItem("todos", JSON.stringify(todos));
 };
+
+export const deleteFromLocalStorage = (id) => {
+  const todos = JSON.parse(localStorage.getItem("todos"));
+
+  todos.forEach((todo, index) => {
+    if (todo.id === id) {
+      todos.splice(index, 1);
+    }
+  });
+
+  localStorage.setItem("todos", JSON.stringify(todos));
+};

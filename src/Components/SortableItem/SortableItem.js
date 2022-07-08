@@ -3,7 +3,7 @@ import React from "react";
 import "./SortableItem.css";
 import { CSS } from "@dnd-kit/utilities";
 
-function SortableItem({ item }) {
+function SortableItem({ item, handleDelete }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: item.id });
 
@@ -12,8 +12,19 @@ function SortableItem({ item }) {
     transition,
   };
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <div className="item">{item.title}</div>
+    <div ref={setNodeRef} style={style}>
+      <div className="item">
+        <div className="item__content" {...attributes} {...listeners}>
+          <p className="item__title">{item.title}</p>
+        </div>
+
+        <div
+          className="item__delete"
+          onClick={() => handleDelete(item.id, item.status)}
+        >
+          <ion-icon name="trash-outline"></ion-icon>
+        </div>
+      </div>
     </div>
   );
 }

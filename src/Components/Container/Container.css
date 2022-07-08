@@ -5,6 +5,7 @@
 .title {
   text-transform: capitalize;
   text-align: center;
+  user-select: none;
 }
 
 .todo__container {

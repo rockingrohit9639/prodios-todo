@@ -7,7 +7,7 @@ import {
 } from "@dnd-kit/sortable";
 import SortableItem from "../SortableItem/SortableItem";
 
-function Container({ id, items }) {
+function Container({ id, items, handleDelete }) {
   const itemIds = useMemo(() => items.map((item) => item.id), [items]);
 
   const { setNodeRef } = useDroppable({
@@ -24,7 +24,7 @@ function Container({ id, items }) {
         <h1 className="title">{id}</h1>
         <div ref={setNodeRef} className="todo__container">
           {items.map((item, index) => (
-            <SortableItem key={index} item={item} />
+            <SortableItem key={index} item={item} handleDelete={handleDelete} />
           ))}
         </div>
       </div>

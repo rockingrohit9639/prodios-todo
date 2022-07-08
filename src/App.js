@@ -8,10 +8,17 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import Container from "./Components/Container/Container";
-import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import {
+  defaultAnimateLayoutChanges,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
-import { saveToLocalStorage, updateStatusInLocalStorage } from "./utils";
+import {
+  deleteFromLocalStorage,
+  saveToLocalStorage,
+  updateStatusInLocalStorage,
+} from "./utils";
 
 function App() {
   const [title, setTitle] = useState("");
@@ -19,6 +26,9 @@ function App() {
 
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
+
+  const animateLayoutChanges = (args) =>
+    defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -117,6 +127,16 @@ function App() {
     setDesc("");
   };
 
+  const handleDelete = (id, status) => {
+    if (status === "pending") {
+      setPending(pending.filter((item) => item.id !== id));
+    } else if (status === "completed") {
+      setCompleted(completed.filter((item) => item.id !== id));
+    }
+
+    deleteFromLocalStorage(id);
+  };
+
   useEffect(() => {
     const todos = JSON.parse(localStorage.getItem("todos"));
     if (todos) {
@@ -124,8 +144,6 @@ function App() {
       setCompleted(todos.filter((todo) => todo.status === "completed"));
     }
   }, []);
-
-  console.log(pending, completed);
 
   return (
     <div className="App">
@@ -166,9 +184,18 @@ function App() {
             sensors={sensors}
             collisionDetection={closestCorners}
             onDragEnd={handleDragEnd}
+            animateLayoutChanges={animateLayoutChanges}
           >
-            <Container id="pending" items={pending} />
-            <Container id="completed" items={completed} />
+            <Container
+              id="pending"
+              handleDelete={handleDelete}
+              items={pending}
+            />
+            <Container
+              id="completed"
+              handleDelete={handleDelete}
+              items={completed}
+            />
           </DndContext>
         </div>
       </main>
