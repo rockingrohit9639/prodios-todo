@@ -13,22 +13,27 @@ function SortableItem({ item, handleDelete, setModalOpen, setModalItem }) {
   };
   return (
     <div ref={setNodeRef} style={style}>
-      <div
-        className="item"
-        onClick={() => {
-          setModalItem(item);
-          setModalOpen(true);
-        }}
-      >
-        <div className="item__content" {...attributes} {...listeners}>
+      <div className="item">
+        <div
+          className="item__content"
+          onClick={() => {
+            setModalItem(item);
+            setModalOpen(true);
+          }}
+        >
           <p className="item__title">{item.title}</p>
         </div>
 
-        <div
-          className="item__delete"
-          onClick={() => handleDelete(item.id, item.status)}
-        >
-          <ion-icon name="trash-outline"></ion-icon>
+        <div className="item__actions">
+          <div
+            className="item__delete"
+            onClick={() => handleDelete(item.id, item.status)}
+          >
+            <ion-icon name="trash-outline"></ion-icon>
+          </div>
+          <div className="item__handle" {...attributes} {...listeners}>
+            <ion-icon name="move-outline"></ion-icon>
+          </div>
         </div>
       </div>
     </div>
