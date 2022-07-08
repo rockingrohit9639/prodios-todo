@@ -75,3 +75,10 @@
   background: hsl(192, 100%, 67%);
   cursor: pointer;
 }
+
+.todos {
+  width: 80vw;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}

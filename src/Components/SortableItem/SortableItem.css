@@ -1,0 +1,8 @@
+.item {
+  padding: 1rem;
+  margin-block: 1rem;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0 6px 12px -10px rgba(0, 0, 0, 0.2);
+}

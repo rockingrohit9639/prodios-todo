@@ -1,0 +1,16 @@
+.todos__list {
+  flex: 1;
+}
+
+.title {
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.todo__container {
+  background: #f0f0f0;
+  padding: 10px;
+  flex: 1;
+  margin: 10px 0;
+  min-height: 10rem;
+}
