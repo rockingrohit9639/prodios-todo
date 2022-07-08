@@ -11,6 +11,7 @@ import Container from "./Components/Container/Container";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
+import { saveToLocalStorage } from "./utils";
 
 function App() {
   const [title, setTitle] = useState("");
@@ -104,10 +105,12 @@ function App() {
       id,
       title,
       desc,
+      status: "pending",
     };
 
     setPending((prev) => [...prev, newTodo]);
 
+    saveToLocalStorage(newTodo);
     setTitle("");
     setDesc("");
   };
